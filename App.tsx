@@ -7,9 +7,10 @@ import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { ApolloProvider } from "@apollo/client";
-import client, { isLoggedInVar, TOKEN, tokenVar } from "./apollo";
+import client, { cache, isLoggedInVar, TOKEN, tokenVar } from "./apollo";
 import LoggedInNavigation from "./navigators/LoggedInNavigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,6 +21,7 @@ const App = () => {
       isLoggedInVar(true);
       tokenVar(token);
     }
+    await persistCache({ cache, storage: new AsyncStorageWrapper(AsyncStorage) });
 
     const fontsArray: { [x: string]: any }[] = [Ionicons.font];
     const fontPromise: Promise<void>[] = fontsArray.map((font) => Font.loadAsync(font));

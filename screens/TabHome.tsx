@@ -1,19 +1,35 @@
-import { Text } from "react-native";
-import styled from "styled-components/native";
-
-const Container = styled.View`
-  background-color: black;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-`;
+import { useState } from "react";
+import { FlatList } from "react-native";
+import CoffeeShopItem from "../components/CoffeeShopItem";
+import ScreenLayout from "../components/ScreenLayout";
+import { useSeeCoffeeShopsQuery } from "../generated/graphql";
+import { onRefresh } from "../shared/shared.utils";
 
 const TabHome = () => {
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const { data, loading, refetch, fetchMore } = useSeeCoffeeShopsQuery({ variables: { offset: 0 } });
+
+  const onEndReached = async () => {
+    await fetchMore({ variables: { offset: data?.seeCoffeeShops?.length } });
+  };
+
+  const renderItem = ({ item: coffeeShop }: any) => {
+    return <CoffeeShopItem key={String(coffeeShop.id)} {...coffeeShop} />;
+  };
+
   return (
-    <Container>
-      <Text style={{ color: "white" }}>TabHome</Text>
-    </Container>
+    <ScreenLayout loading={loading}>
+      <FlatList
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
+        refreshing={refreshing}
+        onRefresh={() => onRefresh(setRefreshing, refetch)}
+        showsVerticalScrollIndicator={false}
+        data={data?.seeCoffeeShops}
+        renderItem={renderItem}
+        keyExtractor={(coffeeShop) => String(coffeeShop?.id)}
+      />
+    </ScreenLayout>
   );
 };
 

@@ -130,7 +130,7 @@ export type Query = {
   seeCategories: SeeCategoriesResult;
   seeCategory: SeeCategoryResult;
   seeCoffeeShop: SeeCoffeeShopResult;
-  seeCoffeeShops: SeeCoffeeShopsResult;
+  seeCoffeeShops?: Maybe<Array<Maybe<CoffeeShop>>>;
   seeFollowers: SeeFollowResult;
   seeFollowing: SeeFollowResult;
   seeMe?: Maybe<User>;
@@ -160,7 +160,7 @@ export type QuerySeeCoffeeShopArgs = {
 
 
 export type QuerySeeCoffeeShopsArgs = {
-  page?: InputMaybe<Scalars['Int']>;
+  offset: Scalars['Int'];
 };
 
 
@@ -206,14 +206,6 @@ export type SeeCoffeeShopResult = {
   coffeeShop?: Maybe<CoffeeShop>;
   message: Scalars['String'];
   ok: Scalars['Boolean'];
-};
-
-export type SeeCoffeeShopsResult = {
-  __typename?: 'SeeCoffeeShopsResult';
-  coffeeShops?: Maybe<Array<Maybe<CoffeeShop>>>;
-  message: Scalars['String'];
-  ok: Scalars['Boolean'];
-  totalCoffeeShops: Scalars['Int'];
 };
 
 export type SeeFollowResult = {
@@ -268,6 +260,13 @@ export type LoginMutationVariables = Exact<{
 
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResult', ok: boolean, message: string, token?: string | null } };
+
+export type SeeCoffeeShopsQueryVariables = Exact<{
+  offset: Scalars['Int'];
+}>;
+
+
+export type SeeCoffeeShopsQuery = { __typename?: 'Query', seeCoffeeShops?: Array<{ __typename?: 'CoffeeShop', id: number, name: string, latitude?: number | null, longitude?: number | null, user: { __typename?: 'User', id: number, username: string, avatarUrl?: string | null }, coffeeShopPhotos?: Array<{ __typename?: 'CoffeeShopPhoto', id: number, url: string } | null> | null, categories?: Array<{ __typename?: 'Category', id: number, name: string, slug: string } | null> | null } | null> | null };
 
 export type SeeMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -354,6 +353,58 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const SeeCoffeeShopsDocument = gql`
+    query SeeCoffeeShops($offset: Int!) {
+  seeCoffeeShops(offset: $offset) {
+    id
+    name
+    latitude
+    longitude
+    user {
+      id
+      username
+      avatarUrl
+    }
+    coffeeShopPhotos {
+      id
+      url
+    }
+    categories {
+      id
+      name
+      slug
+    }
+  }
+}
+    `;
+
+/**
+ * __useSeeCoffeeShopsQuery__
+ *
+ * To run a query within a React component, call `useSeeCoffeeShopsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSeeCoffeeShopsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSeeCoffeeShopsQuery({
+ *   variables: {
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useSeeCoffeeShopsQuery(baseOptions: Apollo.QueryHookOptions<SeeCoffeeShopsQuery, SeeCoffeeShopsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SeeCoffeeShopsQuery, SeeCoffeeShopsQueryVariables>(SeeCoffeeShopsDocument, options);
+      }
+export function useSeeCoffeeShopsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SeeCoffeeShopsQuery, SeeCoffeeShopsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SeeCoffeeShopsQuery, SeeCoffeeShopsQueryVariables>(SeeCoffeeShopsDocument, options);
+        }
+export type SeeCoffeeShopsQueryHookResult = ReturnType<typeof useSeeCoffeeShopsQuery>;
+export type SeeCoffeeShopsLazyQueryHookResult = ReturnType<typeof useSeeCoffeeShopsLazyQuery>;
+export type SeeCoffeeShopsQueryResult = Apollo.QueryResult<SeeCoffeeShopsQuery, SeeCoffeeShopsQueryVariables>;
 export const SeeMeDocument = gql`
     query SeeMe {
   seeMe {
