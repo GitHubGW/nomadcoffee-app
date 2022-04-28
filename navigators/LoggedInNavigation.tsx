@@ -16,17 +16,24 @@ const LoggedInNavigation = () => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerShown: false,
         tabBarStyle: { backgroundColor: "black" },
         tabBarActiveTintColor: "white",
       }}
     >
-      <Tab.Screen name="Home" component={TabHome} options={{ tabBarIcon: ({ color }) => <FontAwesome name="home" size={24} color={color} /> }} />
-      <Tab.Screen name="Search" component={TabSearch} options={{ tabBarIcon: ({ color }) => <FontAwesome name="search" size={24} color={color} /> }} />
+      <Tab.Screen name="Home" component={TabHome} options={{ headerShown: false, tabBarIcon: ({ color }) => <FontAwesome name="home" size={24} color={color} /> }} />
+      <Tab.Screen
+        name="Search"
+        component={TabSearch}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          tabBarIcon: ({ color }) => <FontAwesome name="search" size={24} color={color} />,
+        }}
+      />
       <Tab.Screen
         name="Profile"
         component={isLoggedIn === true ? TabProfile : LoggedOutNavigation}
-        options={{ tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color} /> }}
+        options={{ headerShown: false, tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color} /> }}
       />
     </Tab.Navigator>
   );

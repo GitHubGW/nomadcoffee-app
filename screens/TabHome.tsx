@@ -14,20 +14,22 @@ const TabHome = () => {
   };
 
   const renderItem = ({ item: coffeeShop }: any) => {
-    return <CoffeeShopItem key={String(coffeeShop.id)} {...coffeeShop} />;
+    return <CoffeeShopItem key={coffeeShop.id} {...coffeeShop} />;
   };
 
   return (
     <ScreenLayout loading={loading}>
       <FlatList
         onEndReached={onEndReached}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0}
         refreshing={refreshing}
         onRefresh={() => onRefresh(setRefreshing, refetch)}
         showsVerticalScrollIndicator={false}
         data={data?.seeCoffeeShops}
         renderItem={renderItem}
-        keyExtractor={(coffeeShop) => String(coffeeShop?.id)}
+        keyExtractor={(coffeeShop, index) => {
+          return String(coffeeShop?.id);
+        }}
       />
     </ScreenLayout>
   );
