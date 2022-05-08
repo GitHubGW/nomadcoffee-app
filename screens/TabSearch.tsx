@@ -7,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useSearchCoffeeShopsLazyQuery } from "../generated/graphql";
 import CoffeeShopItem from "../components/CoffeeShopItem";
 
-type TabNavigationProps = NativeStackScreenProps<RootStackParamList, "TabSearch">;
+type SearchNavigationProps = NativeStackScreenProps<RootStackParamList, "TabSearch">;
 
 interface SearchFormData {
   keyword: string;
@@ -35,7 +35,7 @@ const SText = styled.Text`
   margin-top: 100px;
 `;
 
-const TabSearch = ({ navigation }: TabNavigationProps) => {
+const TabSearch = ({ navigation }: SearchNavigationProps) => {
   const { control, getValues } = useForm<SearchFormData>({ defaultValues: { keyword: "" } });
   const [searchCoffeeShopsLazyQuery, { data, loading, called }] = useSearchCoffeeShopsLazyQuery();
 

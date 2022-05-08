@@ -128,6 +128,7 @@ export type Query = {
   __typename?: 'Query';
   searchCoffeeShops?: Maybe<Array<Maybe<CoffeeShop>>>;
   searchUsers: SearchUsersResult;
+  seeAllCoffeeShops?: Maybe<SeeAllCoffeeShops>;
   seeCategories: SeeCategoriesResult;
   seeCategory: SeeCategoryResult;
   seeCoffeeShop: SeeCoffeeShopResult;
@@ -146,6 +147,11 @@ export type QuerySearchCoffeeShopsArgs = {
 
 export type QuerySearchUsersArgs = {
   username: Scalars['String'];
+};
+
+
+export type QuerySeeAllCoffeeShopsArgs = {
+  page: Scalars['Int'];
 };
 
 
@@ -191,6 +197,14 @@ export type SearchUsersResult = {
   message: Scalars['String'];
   ok: Scalars['Boolean'];
   users?: Maybe<Array<Maybe<User>>>;
+};
+
+export type SeeAllCoffeeShops = {
+  __typename?: 'SeeAllCoffeeShops';
+  coffeeShops?: Maybe<Array<Maybe<CoffeeShop>>>;
+  message: Scalars['String'];
+  ok: Scalars['Boolean'];
+  totalCoffeeShops: Scalars['Int'];
 };
 
 export type SeeCategoriesResult = {
@@ -258,6 +272,14 @@ export type CreateAccountMutationVariables = Exact<{
 
 
 export type CreateAccountMutation = { __typename?: 'Mutation', createAccount: { __typename?: 'CommonResult', ok: boolean, message: string, id?: number | null } };
+
+export type CreateCoffeeShopMutationVariables = Exact<{
+  name: Scalars['String'];
+  category?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type CreateCoffeeShopMutation = { __typename?: 'Mutation', createCoffeeShop: { __typename?: 'CommonResult', ok: boolean, message: string } };
 
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
@@ -330,6 +352,41 @@ export function useCreateAccountMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccountMutation>;
 export type CreateAccountMutationResult = Apollo.MutationResult<CreateAccountMutation>;
 export type CreateAccountMutationOptions = Apollo.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
+export const CreateCoffeeShopDocument = gql`
+    mutation CreateCoffeeShop($name: String!, $category: String) {
+  createCoffeeShop(name: $name, category: $category) {
+    ok
+    message
+  }
+}
+    `;
+export type CreateCoffeeShopMutationFn = Apollo.MutationFunction<CreateCoffeeShopMutation, CreateCoffeeShopMutationVariables>;
+
+/**
+ * __useCreateCoffeeShopMutation__
+ *
+ * To run a mutation, you first call `useCreateCoffeeShopMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCoffeeShopMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCoffeeShopMutation, { data, loading, error }] = useCreateCoffeeShopMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      category: // value for 'category'
+ *   },
+ * });
+ */
+export function useCreateCoffeeShopMutation(baseOptions?: Apollo.MutationHookOptions<CreateCoffeeShopMutation, CreateCoffeeShopMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCoffeeShopMutation, CreateCoffeeShopMutationVariables>(CreateCoffeeShopDocument, options);
+      }
+export type CreateCoffeeShopMutationHookResult = ReturnType<typeof useCreateCoffeeShopMutation>;
+export type CreateCoffeeShopMutationResult = Apollo.MutationResult<CreateCoffeeShopMutation>;
+export type CreateCoffeeShopMutationOptions = Apollo.BaseMutationOptions<CreateCoffeeShopMutation, CreateCoffeeShopMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
